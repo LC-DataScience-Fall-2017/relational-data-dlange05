@@ -1,0 +1,38 @@
+---
+title: "relational data"
+author: "Dylan Lange"
+date: "October 24, 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+library(tidyverse)
+library(nycflights13)
+```
+
+#Chapter 10
+
+##Group 1 Exercises
+
+###Exercise 1
+In order to track this, you will need the variables origin, destination, including the latitude and longitude for the airports.  To do this you need to combine weather and airports to the flights table in order to get the origin, dest, and latitude and longitude for each.  You could also factor in the weather for the flights if you were interested in some very complex math.
+
+###Exercise 2
+The relationship between weather and airports is that origin is faa from the airports table.  THis table should show an arrow from faa in airports to origin in weather, then from weather to origin in the flights table.
+
+###Exercise 3
+It could also define the relationship to the destination, via the location of the destination and its code.  You could also model the reason for the delays, whether that be weather in the origin airport of the destination airport.
+
+###Exercise 4
+I would represent it as a holiday data frame.  It would include dates and times of these special days from the weather table.  I would also include origin and destination from airports as well as the carriers variable from the airlines table.  
+
+##Group 2 Exercises
+
+###Exercise 1
+```{r}
+mutate(flights, key=row_number())%>%count(key)%>%filter(n>1)
+```
