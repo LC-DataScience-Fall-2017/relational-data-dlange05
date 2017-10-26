@@ -12,6 +12,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r, include=FALSE}
 library(tidyverse)
 library(nycflights13)
+library(babynames)
+library(nasaweather)
+library(fueleconomy)
 ```
 
 #Chapter 10
@@ -34,5 +37,52 @@ I would represent it as a holiday data frame.  It would include dates and times 
 
 ###Exercise 1
 ```{r}
-mutate(flights, key=row_number())%>%count(key)%>%filter(n>1)
+mutate(flights, key=row_number())
+```
+
+###Exercise 2
+ * a: They key is a combination of PlayerID, YearID, Stint, and TeamID.  The player can play in multiple years, multiple stints, within a year, and with multiple teams, so the combination of them is a composite key
+ * b: There doesn't seem to be a key within the babynames data, the key would need to be a surrogate key by row number.
+ * c: year,month seems to be the key for this data because each observation is once per month each year.
+ * d: id is the key for this table because each vehicle has a separate id.
+ * e: There is no key in this data set.  A surrogate key would have to be added by row number.
+ 
+###Exercise 3
+
+
+##Group 2 Exercises
+
+###Exercise 1
+```{r}
+flights2<-flights%>%
+  group_by(dest)%>%
+  summarise(average=mean(dep_delay))
+
+airports%>%
+  full_join(flights2, c("faa"="dest"))%>%
+  ggplot(aes(lon,lat, size=average))+
+    borders("state")+
+    geom_point()+
+    coord_quickmap()
+```
+
+###Exercise 2
+```{r}
+flights %>%
+  left_join(airports, c("dest"="faa")) %>%
+  left_join(airports, c("origin"="faa"))
+```
+
+###Exercise 3
+```{r}
+flights%>%
+  left_join(planes, by="tailnum")%>%
+  select(year.x:day, dep_delay:dep_delay, year.y:year.y, tailnum:tailnum)%>%
+  ggplot()+
+  geom_point(mapping=aes(x=tailnum, y=dep_delay, fill=year.y))
+```
+
+```{r}
+planes
+flights
 ```
