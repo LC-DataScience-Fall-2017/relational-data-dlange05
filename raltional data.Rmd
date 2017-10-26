@@ -113,3 +113,31 @@ airports%>%
 
 On June 12 and 13, there were two derecho weather events, which are extremely sever thunderstorms causing delays accross the destinations on the map.
 
+
+##Group 4 Exercises
+
+###Exercise 1
+```{r}
+filter(flights, is.na(tailnum))
+
+flights%>%
+  anti_join(planes, by="tailnum")%>%
+  ggplot()+
+  geom_bar(mapping=aes(x=carrier))
+  
+```
+
+A flight with a missing tailnum is most likely a cancelled flight because they do not have arrival or departure time, nor do they air time.
+
+The flights that don't have matching tailnums in planes are almost all with the carrier AA or MQ.
+
+###Exercise 2
+```{r}
+test<-flights%>%
+  anti_join(planes, by="tailnum")%>%
+  count(tailnum)%>%
+  filter(n>100)
+
+flights%>%
+  semi_join(test)
+```
