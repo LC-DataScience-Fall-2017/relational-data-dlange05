@@ -56,11 +56,11 @@ mutate(flights, key=row_number())
 ```{r}
 flights2<-flights%>%
   group_by(dest)%>%
-  summarise(average=mean(dep_delay))
+  summarise(average=mean(dep_delay,na.rm=TRUE))
 
 airports%>%
-  full_join(flights2, c("faa"="dest"))%>%
-  ggplot(aes(lon,lat, size=average))+
+  inner_join(flights2, c("faa"="dest"))%>%
+  ggplot(aes(lon,lat, color=average))+
     borders("state")+
     geom_point()+
     coord_quickmap()
@@ -79,10 +79,37 @@ flights%>%
   left_join(planes, by="tailnum")%>%
   select(year.x:day, dep_delay:dep_delay, year.y:year.y, tailnum:tailnum)%>%
   ggplot()+
-  geom_point(mapping=aes(x=tailnum, y=dep_delay, fill=year.y))
+  geom_point(aes(x=dep_delay, y=year.y))
 ```
 
+There really isn't a relationship between age of the plane and delays.  While newer planes have more delays, they are also used more often.
+
+###Exercise 4
 ```{r}
-planes
-flights
+weather%>%
+  inner_join(flights)%>%
+  select(origin:visib, dep_delay)%>%
+  ggplot()+
+  geom_point(mapping=aes(x=dep_delay, y=humid))
 ```
+
+There appears to be small relation between humidity and departure delays.  High humidity does not necessarily result in delays, but you are more likely to be delayed if the humidity is higher.
+
+###Exercise 5
+```{r}
+flights3<-weather%>%
+  right_join(flights, by=c("origin", "year", "month", "day", "hour"))%>%
+  filter(month==6, day==13, year==2013) %>%
+  group_by(dest)%>%
+  summarise(average=mean(dep_delay,na.rm=TRUE))
+
+airports%>%
+  inner_join(flights3, c("faa"="dest"))%>%
+  ggplot(aes(lon,lat, color=average))+
+    borders("state")+
+    geom_point()+
+    coord_quickmap()
+```
+
+On June 12 and 13, there were two derecho weather events, which are extremely sever thunderstorms causing delays accross the destinations on the map.
+
