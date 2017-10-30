@@ -141,3 +141,71 @@ test<-flights%>%
 flights%>%
   semi_join(test)
 ```
+
+###Exercise 3
+```{r}
+filtered<-common%>% 
+  filter(n>125)
+  semi_join(vehicles,filtered)
+```
+
+###Exercise 4
+
+
+###Exercise 5
+```{r}
+anti_join(flights, airports, by = c("dest"="faa"))
+```
+
+This is all the flights where the destination is not included in the airports table.
+
+```{r}
+anti_join(airports, flights, by = c("faa" = "dest"))
+```
+
+This shows all the airports that don't have a matching destination in flights.
+
+###Exercise 6
+```{r}
+top_ten<-flights%>%
+  count(tailnum, sort=TRUE)%>%
+  head(10)
+semi_join(flights, top_ten)%>%
+  filter(tailnum=="N725MQ")%>%
+  ggplot()+
+  geom_bar(mapping=aes(x=carrier))
+semi_join(flights, top_ten)%>%
+  filter(tailnum=="N722MQ")%>%
+  ggplot()+
+  geom_bar(mapping=aes(x=carrier))
+semi_join(flights, top_ten)%>%
+  filter(tailnum=="N723MQ")%>%
+  ggplot()+
+  geom_bar(mapping=aes(x=carrier))
+semi_join(flights, top_ten)%>%
+  filter(tailnum=="N711MQ")%>%
+  ggplot()+
+  geom_bar(mapping=aes(x=carrier))
+semi_join(flights, top_ten)%>%
+  filter(tailnum=="N713MQ")%>%
+  ggplot()+
+  geom_bar(mapping=aes(x=carrier))
+semi_join(flights, top_ten)%>%
+  filter(tailnum=="N258JB")%>%
+  ggplot()+
+  geom_bar(mapping=aes(x=carrier))
+semi_join(flights, top_ten)%>%
+  filter(tailnum=="N298JB")%>%
+  ggplot()+
+  geom_bar(mapping=aes(x=carrier))
+semi_join(flights, top_ten)%>%
+  filter(tailnum=="N353JB")%>%
+  ggplot()+
+  geom_bar(mapping=aes(x=carrier))
+semi_join(flights, top_ten)%>%
+  filter(tailnum=="N351JB")%>%
+  ggplot()+
+  geom_bar(mapping=aes(x=carrier))
+```
+
+For the top 9 most common tail numbers, they each have only one carrier listed in the flight table.  They carrier and tailnumber are related.
