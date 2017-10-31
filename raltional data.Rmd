@@ -15,6 +15,7 @@ library(nycflights13)
 library(babynames)
 library(nasaweather)
 library(fueleconomy)
+library(zoo)
 ```
 
 #Chapter 10
@@ -48,9 +49,13 @@ mutate(flights, key=row_number())
  * e: There is no key in this data set.  A surrogate key would have to be added by row number.
  
 ###Exercise 3
+The Player Id in the batting table links to the player ID in the master table.  THe master table holds most of the player information.  These tables are also linked by year ID, stint, and team Id.  Together, these variables would make a composite key. yearID, teamID, and playerID could also be linked to the salaires table as well.
 
+Manager table is linked ot the Master table through the same composite keys listed above.  those being, YearID, TeamID, PlayerID.  The same links would be made to the Awards Managers table.
 
-##Group 2 Exercises
+The batting, pitching, and fielding table are linked together by the playerId, yearId, stint, and teamID.  The tables then hold the stats that fall within each of the tables.
+
+##Group 3 Exercises
 
 ###Exercise 1
 ```{r}
@@ -150,7 +155,20 @@ filtered<-common%>%
 ```
 
 ###Exercise 4
+```{r}
+flights %>% 
+  group_by(month, day, hour) %>% 
+  summarise(ave_delay = mean(dep_delay, na.rm=TRUE)) %>% ungroup() %>% 
+  mutate(window_ave_delay = rollapply(ave_delay, 40, mean, align="left", fill=NA_real_)) %>%
+  arrange(desc(window_ave_delay))
+```
 
+Through this table, we find that the worst 48 hour delay started on June 26 at 10 PM.
+```{r}
+filter(weather, month==6 & day>25 & day <29)
+```
+
+The most apparent difference between the weather in this stretch is that the dew point was significatnly higher that it normally is during that time, however, the precipitation is 0 almost throughout the 48 hours.
 
 ###Exercise 5
 ```{r}

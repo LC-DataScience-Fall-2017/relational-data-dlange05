@@ -180,10 +180,13 @@ $(document).ready(function () {
 </div>
 <div id="exercise-3-1" class="section level3">
 <h3>Exercise 3</h3>
+<p>The Player Id in the batting table links to the player ID in the master table. THe master table holds most of the player information. These tables are also linked by year ID, stint, and team Id. Together, these variables would make a composite key. yearID, teamID, and playerID could also be linked to the salaires table as well.</p>
+<p>Manager table is linked ot the Master table through the same composite keys listed above. those being, YearID, TeamID, PlayerID. The same links would be made to the Awards Managers table.</p>
+<p>The batting, pitching, and fielding table are linked together by the playerId, yearId, stint, and teamID. The tables then hold the stats that fall within each of the tables.</p>
 </div>
 </div>
-<div id="group-2-exercises-1" class="section level2">
-<h2>Group 2 Exercises</h2>
+<div id="group-3-exercises" class="section level2">
+<h2>Group 3 Exercises</h2>
 <div id="exercise-1-2" class="section level3">
 <h3>Exercise 1</h3>
 <pre class="r"><code>flights2&lt;-flights%&gt;%
@@ -353,6 +356,43 @@ flights%&gt;%
 </div>
 <div id="exercise-4-2" class="section level3">
 <h3>Exercise 4</h3>
+<pre class="r"><code>flights %&gt;% 
+  group_by(month, day, hour) %&gt;% 
+  summarise(ave_delay = mean(dep_delay, na.rm=TRUE)) %&gt;% ungroup() %&gt;% 
+  mutate(window_ave_delay = rollapply(ave_delay, 40, mean, align=&quot;left&quot;, fill=NA_real_)) %&gt;%
+  arrange(desc(window_ave_delay))</code></pre>
+<pre><code>## # A tibble: 6,936 x 5
+##    month   day  hour ave_delay window_ave_delay
+##    &lt;int&gt; &lt;int&gt; &lt;dbl&gt;     &lt;dbl&gt;            &lt;dbl&gt;
+##  1     6    26    22 66.875000         54.60608
+##  2     6    27    14 41.133333         53.45143
+##  3     6    27    15 43.417910         53.32004
+##  4     6    27    13 16.720000         53.13277
+##  5     6    26    23 58.750000         53.05504
+##  6     6    26    20 64.392157         53.01626
+##  7     6    27    12 17.769231         53.00601
+##  8     6    27    11  7.404255         52.78390
+##  9     6    26    21 68.515152         52.76896
+## 10     6    27    10 14.489796         52.68219
+## # ... with 6,926 more rows</code></pre>
+<p>Through this table, we find that the worst 48 hour delay started on June 26 at 10 PM.</p>
+<pre class="r"><code>filter(weather, month==6 &amp; day&gt;25 &amp; day &lt;29)</code></pre>
+<pre><code>## # A tibble: 216 x 15
+##    origin  year month   day  hour  temp  dewp humid wind_dir wind_speed
+##     &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;      &lt;dbl&gt;
+##  1    EWR  2013     6    26     0 82.94 66.92 58.51      240   10.35702
+##  2    EWR  2013     6    26     1 82.04 66.02 58.40      240   10.35702
+##  3    EWR  2013     6    26     2 80.60 66.20 61.58      240   10.35702
+##  4    EWR  2013     6    26     3 75.20 71.60 88.59      260    8.05546
+##  5    EWR  2013     6    26     4 77.00 71.06 81.92        0    0.00000
+##  6    EWR  2013     6    26     5 75.02 69.98 84.34      210    5.75390
+##  7    EWR  2013     6    26     6 75.92 69.98 81.85      260   11.50780
+##  8    EWR  2013     6    26     7 73.94 68.00 81.71      270   13.80936
+##  9    EWR  2013     6    26     8 73.04 66.02 78.65      260    8.05546
+## 10    EWR  2013     6    26     9 73.04 66.02 78.65      240    6.90468
+## # ... with 206 more rows, and 5 more variables: wind_gust &lt;dbl&gt;,
+## #   precip &lt;dbl&gt;, pressure &lt;dbl&gt;, visib &lt;dbl&gt;, time_hour &lt;dttm&gt;</code></pre>
+<p>The most apparent difference between the weather in this stretch is that the dew point was significatnly higher that it normally is during that time, however, the precipitation is 0 almost throughout the 48 hours.</p>
 </div>
 <div id="exercise-5-1" class="section level3">
 <h3>Exercise 5</h3>
